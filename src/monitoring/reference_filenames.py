@@ -56,15 +56,19 @@ def generate_file_list(folder_path: str, save_dir: str, output_filename: str) ->
 
 def get_file_names(folder: Path) -> List[str]:
     """
-    Retrieves the names of all files in the specified folder.
+    Retrieves the names of all files in the specified folder, removing the '.pdf' extension if present.
 
     Args:
         folder (Path): The path to the folder.
 
     Returns:
-        List[str]: A list of file names in the folder.
+        List[str]: A list of file names without the '.pdf' extension in the folder.
     """
-    return [file.name for file in folder.iterdir() if file.is_file()]
+    return [
+        file.stem if file.suffix == ".pdf" else file.name
+        for file in folder.iterdir()
+        if file.is_file()
+    ]
 
 
 def write_to_file(output_file: Path, file_names: List[str]) -> None:
@@ -81,3 +85,7 @@ def write_to_file(output_file: Path, file_names: List[str]) -> None:
     with open(output_file, "w", encoding="utf-8") as file:
         for file_name in file_names:
             file.write(f"{file_name}\n")
+
+
+if __name__ == "__main__":
+    main()
