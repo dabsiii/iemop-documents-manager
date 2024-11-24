@@ -1,37 +1,83 @@
 from pathlib import Path
+from typing import List
 
-from icecream import ic
-
-"""
-This creates a list of the generated invoices used for monitoring
-The output of the program is .txt which can then be converted to .csv
-"""
+from icecream import ic  # For debugging purposes
 
 
-def main():
-    FOLDER_PATH = "C:\\Users\\ps.public.PS-LT022-813B\\Desktop\\ouput INVOICE 202410"
-    SAVE_DIR = "C:\\Users\\ps.public.PS-LT022-813B\\Desktop"
-    OUTPUT_FILENAME = "filenames invoice Oct 2024.txt"
-    list_files_in_folder(FOLDER_PATH, SAVE_DIR, OUTPUT_FILENAME)
+def main() -> None:
+    """
+    Entry point of the program. Configures paths and calls the file listing function.
+    """
+    folder_path: str = (
+        "C:\\Users\\ps.public.PS-LT022-813B\\Desktop\\ouput INVOICE 202410"
+    )
+    save_dir: str = "C:\\Users\\ps.public.PS-LT022-813B\\Desktop"
+    output_filename: str = "filenames invoice Oct 2024.txt"
+
+    generate_file_list(folder_path, save_dir, output_filename)
 
 
-def list_files_in_folder(folder_path: str, save_dir: str, output_filename: str) -> None:
+def generate_file_list(folder_path: str, save_dir: str, output_filename: str) -> None:
+    """
+    Lists all files in the specified folder and writes their names to a text file.
+
+    Args:
+        folder_path (str): The path to the folder containing the files.
+        save_dir (str): The directory where the output file will be saved.
+        output_filename (str): The name of the output file to write the file names to.
+
+    Returns:
+        None
+    """
     try:
-        folder_path = Path(folder_path)
-        save_dir = Path(save_dir)
-        if not folder_path.is_dir():
-            ic("The provided path is not a valid directory.")
+        # Convert paths to Path objects
+        folder = Path(folder_path)
+        save_directory = Path(save_dir)
+
+        # Validate the folder path
+        if not folder.is_dir():
+            ic("Error: The provided path is not a valid directory.")
             return
-        files = [f.name for f in folder_path.iterdir() if f.is_file()]
-        save_dir.mkdir(parents=True, exist_ok=True)
-        output_file = save_dir / output_filename
-        with open(output_file, "w") as file:
-            for f in files:
-                file.write(f"{f}\n")
-        ic(f"File list saved to {output_file}")
-    except Exception as e:
-        ic(f"An error occurred: {e}")
+
+        # Get the list of files in the folder
+        file_names: List[str] = get_file_names(folder)
+
+        # Ensure the save directory exists
+        save_directory.mkdir(parents=True, exist_ok=True)
+
+        # Write the file names to the output file
+        output_file = save_directory / output_filename
+        write_to_file(output_file, file_names)
+
+        ic(f"File list successfully saved to {output_file}")
+    except Exception as error:
+        ic(f"An error occurred: {error}")
 
 
-if __name__ == "__main__":
-    main()
+def get_file_names(folder: Path) -> List[str]:
+    """
+    Retrieves the names of all files in the specified folder.
+
+    Args:
+        folder (Path): The path to the folder.
+
+    Returns:
+        List[str]: A list of file names in the folder.
+    """
+    return [file.name for file in folder.iterdir() if file.is_file()]
+
+
+def write_to_file(output_file: Path, file_names: List[str]) -> None:
+    """
+    Writes the list of file names to the specified output file.
+
+    Args:
+        output_file (Path): The path to the output file.
+        file_names (List[str]): The list of file names to write.
+
+    Returns:
+        None
+    """
+    with open(output_file, "w", encoding="utf-8") as file:
+        for file_name in file_names:
+            file.write(f"{file_name}\n")
