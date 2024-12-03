@@ -6,8 +6,9 @@ class InvoiceRenamer(ABC):
     @abstractmethod
     def rename_booklet(
         self,
-        booklet_pdf_path: Path,
-        booklet_number_start: int,
-        file_name_table: Path,
+        scanned_booklet_path: Path,
+        booklet_number_start: Path,
+        invoice_tracking_filename: Path,
+        sheet_name: str,
         output_path: Path,
     ): ...

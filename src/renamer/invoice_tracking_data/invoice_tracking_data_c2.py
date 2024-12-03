@@ -3,16 +3,19 @@ from pathlib import Path
 import pandas
 from pandas import DataFrame, Series
 
-from src.renamer.filename_table.filename_table import FilenameTable
+from src.renamer.invoice_tracking_data.invoice_tracking_data import InvoiceTrackingData
 
 
-class FilenameTableC1(FilenameTable):
+class InvoiceTrackingDataC2(InvoiceTrackingData):
     INVOICE_NUMBER_COLUMN = "INVOICE NUMBER"
-    FILENAME_COLUMN = "FILENAME"
+    FILENAME_COLUMN = "REFERENCE"
 
-    def __init__(self, table_filepath: Path):
-        excel_data = pandas.read_excel(table_filepath, sheet_name=None)
-        self._all_data = pandas.concat(excel_data.values(), ignore_index=True)
+    def __init__(self, table_filepath: Path, sheet_name: str):
+        self._excel_data = pandas.read_excel(table_filepath, sheet_name=sheet_name)
+        # sheets_dict = pandas.read_excel(excel_file, sheet_name=None)
+
+        # Extract the DataFrames as a list
+        # self._dataframes_list = list(excel_data.values())
 
     def get_filename_from_invoice_number(self, invoice_number: int) -> str:
         record = self._get_record(invoice_number)
@@ -28,8 +31,8 @@ class FilenameTableC1(FilenameTable):
             raise ValueError()
 
     def _get_record(self, target_value) -> DataFrame:
-        filtered_df = self._all_data[
-            self._all_data[self.INVOICE_NUMBER_COLUMN] == target_value
+        filtered_df = self._excel_data[
+            self._excel_data[self.INVOICE_NUMBER_COLUMN] == target_value
         ]
         return filtered_df
 

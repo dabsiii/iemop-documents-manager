@@ -9,10 +9,10 @@ def main() -> None:
     Entry point of the program. Configures paths and calls the file listing function.
     """
     folder_path: str = (
-        "C:\\Users\\ps.public.PS-LT022-813B\\Desktop\\ouput INVOICE 202410"
+        "C:\\Users\\ps.public.PS-LT022-813B\\Desktop\\ouput INVOICE 202408"
     )
     save_dir: str = "C:\\Users\\ps.public.PS-LT022-813B\\Desktop"
-    output_filename: str = "filenames invoice Oct 2024.txt"
+    output_filename: str = "filenames invoice Aug 2024.txt"
 
     generate_file_list(folder_path, save_dir, output_filename)
 
