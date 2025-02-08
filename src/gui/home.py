@@ -2,7 +2,6 @@ import PyQt5.QtCore as qtc
 import PyQt5.QtWidgets as qtw
 import PyQt5.QtGui as qtg
 
-
 import sys
 from src.gui.selector.selector_c1 import SelectorC1
 from pathlib import Path
@@ -11,6 +10,11 @@ from icecream import ic
 
 
 from src.events.event_ import Event_, Event
+
+
+from src.gui.booklet_gui.booklet_gui import BookletGui
+
+from typing import List
 
 
 class Home:
@@ -23,13 +27,25 @@ class Home:
 
     def _init_ui(self):
         self._widget = qtw.QWidget()
-        layout = qtw.QHBoxLayout()
+        self._widget.resize(500, 400)
+        layout = qtw.QVBoxLayout()
         self._widget.setLayout(layout)
 
         self._tracking_data_selector = SelectorC1()
         self._tracking_data_selector.set_title("Tracking Data (csv)")
         self._tracking_data_selector.set_file_types("csv")
         layout.addWidget(self._tracking_data_selector.widget)
+
+        self._scroll_area = qtw.QScrollArea()
+        scroll_widget = qtw.QWidget()
+        self._scroll_area.setWidget(scroll_widget)
+        self._scroll_area.setStyleSheet("QScrollArea { background-color: red; }")
+        self._scroll_area.setWidgetResizable(True)
+        layout.addWidget(self._scroll_area)
+
+        rename_button = qtw.QPushButton()
+        rename_button.setText("Multiple Rename")
+        layout.addWidget(rename_button)
 
     def _setup_events(self):
 
@@ -44,6 +60,21 @@ class Home:
 
     def get_tracker_data_path(self) -> str:
         return self._tracker_data_path
+
+    def display_on_scroll(self, widgets: List[qtw.QWidget]) -> None:
+        old_widget = self._scroll_area.widget()  # Get the current widget
+        if old_widget is not None:
+            old_widget.setParent(None)  # Detach from scroll area
+            old_widget.deleteLater()  # Delete to free memory
+
+        scroll_widget = qtw.QWidget()
+        scroll_layout = qtw.QVBoxLayout()
+        scroll_widget.setLayout(scroll_layout)
+
+        self._scroll_area.setWidget(scroll_widget)  # Set the new widget
+
+        for widget in widgets:
+            scroll_layout.addWidget(widget)
 
     def _set_tracker_data_path(self):
         self._tracker_data_path = self._tracking_data_selector.get_selection()

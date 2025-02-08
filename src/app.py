@@ -4,6 +4,7 @@ from src.renamer.invoice_tracking_data.invoice_tracking_data_c3 import (
     InvoiceTrackingDataC3,
 )
 
+from src.booklet_renamer import BookletRenamer
 
 from icecream import ic
 
@@ -22,4 +23,12 @@ class App:
     def _initialize_tracker(self):
         tracker_data_path = self._home.get_tracker_data_path()
         tracker = InvoiceTrackingDataC3(tracker_data_path)
-        ic(tracker.get_required_booklets())
+
+        booklets = sorted(tracker.get_required_booklets())
+        renamers = []
+        for booklet in booklets:
+            renamer = BookletRenamer(booklet, tracker)
+            renamers.append(renamer)
+
+        renamer_widgets = [renamer.get_widget() for renamer in renamers]
+        self._home.display_on_scroll(renamer_widgets)
