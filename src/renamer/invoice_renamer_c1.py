@@ -5,9 +5,9 @@ from icecream import ic
 from pypdf import PdfReader, PdfWriter
 
 from src.renamer.invoice_renamer import InvoiceRenamer
-from src.renamer.invoice_tracking_data.invoice_tracking_data_c2 import (
+from src.renamer.invoice_tracking_data.invoice_tracking_data_c3 import (
     InvoiceNumberNotFound,
-    InvoiceTrackingDataC2,
+    InvoiceTrackingDataC3,
 )
 
 
@@ -20,13 +20,13 @@ class InvoiceRenamerC1(InvoiceRenamer):
         scanned_booklet_path: Path,
         booklet_number_start: int,
         invoice_tracking_filename: Path,
-        sheet_name: str,
+        # sheet_name: str,
         output_path: Path,
     ):
 
         output_path.mkdir(parents=True, exist_ok=True)
         reader = PdfReader(scanned_booklet_path)
-        table = InvoiceTrackingDataC2(invoice_tracking_filename, sheet_name)
+        table = InvoiceTrackingDataC3(invoice_tracking_filename)
 
         for i, page in enumerate(reader.pages):
 
