@@ -27,7 +27,8 @@ class Home:
 
     def _init_ui(self):
         self._widget = qtw.QWidget()
-        self._widget.resize(500, 400)
+        self._widget.setWindowTitle("Invoice Renamer")
+        self._widget.resize(500, 600)
         layout = qtw.QVBoxLayout()
         self._widget.setLayout(layout)
 
@@ -39,7 +40,7 @@ class Home:
         self._scroll_area = qtw.QScrollArea()
         scroll_widget = qtw.QWidget()
         self._scroll_area.setWidget(scroll_widget)
-        self._scroll_area.setStyleSheet("QScrollArea { background-color: red; }")
+        # self._scroll_area.setStyleSheet("QScrollArea { background-color: red; }")
         self._scroll_area.setWidgetResizable(True)
         layout.addWidget(self._scroll_area)
 
@@ -62,10 +63,7 @@ class Home:
         return self._tracker_data_path
 
     def display_on_scroll(self, widgets: List[qtw.QWidget]) -> None:
-        old_widget = self._scroll_area.widget()  # Get the current widget
-        if old_widget is not None:
-            old_widget.setParent(None)  # Detach from scroll area
-            old_widget.deleteLater()  # Delete to free memory
+        self.clear_scroll()
 
         scroll_widget = qtw.QWidget()
         scroll_layout = qtw.QVBoxLayout()
@@ -75,6 +73,30 @@ class Home:
 
         for widget in widgets:
             scroll_layout.addWidget(widget)
+
+    def clear_scroll(self):
+        old_widget = self._scroll_area.widget()  # Get the current widget
+        if old_widget is not None:
+            old_widget.setParent(None)  # Detach from scroll area
+            old_widget.deleteLater()  # Delete to free memory
+
+    def display_invalid_tracker_data_file(self):
+        self.clear_scroll()
+        scroll_widget = qtw.QWidget()
+        scroll_layout = qtw.QVBoxLayout()
+        scroll_widget.setLayout(scroll_layout)
+
+        self._scroll_area.setWidget(scroll_widget)  # Set the new widget
+
+        label = qtw.QLabel()
+        label.setText("Invalid Tracker Data File.")
+
+        label.setAlignment(qtc.Qt.AlignCenter)
+
+        # Set red text color using stylesheets
+        label.setStyleSheet("color: red; font-size: 20px; font-weight: bold;")
+
+        scroll_layout.addWidget(label)
 
     def _set_tracker_data_path(self):
         self._tracker_data_path = self._tracking_data_selector.get_selection()

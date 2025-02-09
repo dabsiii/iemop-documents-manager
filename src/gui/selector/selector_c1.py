@@ -47,6 +47,7 @@ class SelectorC1(Selector):
 
         # 0.1.1.1 _Title Label
         self._title_label = qtw.QLabel()
+        self._title_label.setStyleSheet("font-weight: bold; font-size: 12px;")
         self._title_label.setText(self._title)
         frame_layout.addWidget(self._title_label)
 

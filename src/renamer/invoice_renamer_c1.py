@@ -8,6 +8,7 @@ from src.renamer.invoice_renamer import InvoiceRenamer
 from src.renamer.invoice_tracking_data.invoice_tracking_data_c3 import (
     InvoiceNumberNotFound,
     InvoiceTrackingDataC3,
+    InvoiceTrackingData,
 )
 
 
@@ -15,18 +16,26 @@ class InvoiceRenamerC1(InvoiceRenamer):
     def __init__(self):
         pass
 
+    def get_number_of_pages(self, pdf_path: Path) -> int:
+        reader = PdfReader(pdf_path)
+        return len(reader.pages)
+
     def rename_booklet(
         self,
         scanned_booklet_path: Path,
         booklet_number_start: int,
-        invoice_tracking_filename: Path,
+        tracking_data: InvoiceTrackingData,
         # sheet_name: str,
         output_path: Path,
     ):
-
+        container = (
+            output_path
+            / f"Invoices {tracking_data.get_transaction_number()} Booklet {booklet_number_start}-{booklet_number_start+49}"
+        )
+        output_path = container
         output_path.mkdir(parents=True, exist_ok=True)
         reader = PdfReader(scanned_booklet_path)
-        table = InvoiceTrackingDataC3(invoice_tracking_filename)
+        table = tracking_data
 
         for i, page in enumerate(reader.pages):
 

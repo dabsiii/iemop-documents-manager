@@ -42,6 +42,11 @@ class InvoiceTrackingDataC3(InvoiceTrackingData):
 
         return required_booklets
 
+    def get_transaction_number(self) -> str:
+        sample_file_name = self._data.iloc[0, 0]
+        transaction_number = sample_file_name.split("_")[3]
+        return transaction_number
+
 
 class InvoiceNumberNotFound(Exception):
     """When the invoice number is not on the table"""

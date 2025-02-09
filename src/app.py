@@ -14,7 +14,7 @@ class App:
         self._home = Home()
 
     def _setup_events(self):
-        self._home.selected_tracking_data.subscribe(self._initialize_tracker)
+        self._home.selected_tracking_data.subscribe(self._try_initialize_tracker)
 
     def start(self):
         self._setup_events()
@@ -32,3 +32,15 @@ class App:
 
         renamer_widgets = [renamer.get_widget() for renamer in renamers]
         self._home.display_on_scroll(renamer_widgets)
+
+    def _try_initialize_tracker(self):
+        tracker_data_path = self._home.get_tracker_data_path()
+        if tracker_data_path is None:
+            self._home.clear_scroll()
+
+        else:
+            try:
+                self._initialize_tracker()
+            except Exception as e:
+                ic(e)
+                self._home.display_invalid_tracker_data_file()
