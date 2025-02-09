@@ -13,6 +13,9 @@ from src.renamer.invoice_tracking_data.invoice_tracking_data_c3 import (
 from pathlib import Path
 
 
+from icecream import ic
+
+
 class BookletRenamer:
     def __init__(self, booklet: Booklet, tracker_data: InvoiceTrackingData):
         self._booklet = booklet
@@ -35,9 +38,29 @@ class BookletRenamer:
 
     def rename_booklet(self, output_dir):
         renamer = InvoiceRenamerC1()
-        renamer.rename_booklet(
-            scanned_booklet_path=self._gui.get_booklet_path(),
-            booklet_number_start=self._booklet.get_starting_number(),
-            tracking_data=self._tracker_data,
-            output_path=Path(output_dir).resolve(),
-        )
+        try:
+            start = self._booklet.get_starting_number()
+            output_path = Path(output_dir).resolve()
+            renamer.rename_booklet(
+                scanned_booklet_path=self._gui.get_booklet_path(),
+                booklet_number_start=start,
+                tracking_data=self._tracker_data,
+                output_path=output_path,
+            )
+            self._gui.show_info(
+                "Done",
+                f"""
+Invoices Renamed Succesfuly. 
+Transaction Reference: {self._tracker_data.get_transaction_number()} 
+Booklets {start}-{start+49} 
+
+Output Location: {output_path}""",
+            )
+        except Exception as e:
+            ic(e)
+            self._gui.show_error(
+                "Error", "Unexpected Error Occured, please check your inputs."
+            )
+
+    def ready(self):
+        return self._gui.ready

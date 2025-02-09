@@ -112,6 +112,16 @@ class BookletGui:
         self.msg.setStandardButtons(qtw.QMessageBox.Ok)
         self.msg.exec()
 
+    def show_info(self, title, message):
+        msg = qtw.QMessageBox()
+        msg.setWindowTitle(title)
+        msg.setText(message)
+        msg.setIcon(
+            qtw.QMessageBox.Information
+        )  # Options: Information, Warning, Critical, Question
+        msg.setStandardButtons(qtw.QMessageBox.Ok | qtw.QMessageBox.Cancel)
+        msg.exec_()  # Show the popup
+
     @property
     def widget(self):
         return self._widget

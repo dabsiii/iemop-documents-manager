@@ -8,13 +8,17 @@ from src.booklet_renamer import BookletRenamer
 
 from icecream import ic
 
+from typing import List
+
 
 class App:
     def __init__(self):
         self._home = Home()
+        self._renamers: List[BookletRenamer] = []
 
     def _setup_events(self):
         self._home.selected_tracking_data.subscribe(self._try_initialize_tracker)
+        self._home.clicked_rename_button.subscribe(lambda e: self._rename())
 
     def start(self):
         self._setup_events()
@@ -25,12 +29,12 @@ class App:
         tracker = InvoiceTrackingDataC3(tracker_data_path)
 
         booklets = sorted(tracker.get_required_booklets())
-        renamers = []
+        self._renamers = []
         for booklet in booklets:
             renamer = BookletRenamer(booklet, tracker)
-            renamers.append(renamer)
+            self._renamers.append(renamer)
 
-        renamer_widgets = [renamer.get_widget() for renamer in renamers]
+        renamer_widgets = [renamer.get_widget() for renamer in self._renamers]
         self._home.display_on_scroll(renamer_widgets)
 
     def _try_initialize_tracker(self):

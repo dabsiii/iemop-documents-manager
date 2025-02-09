@@ -16,6 +16,8 @@ from src.gui.booklet_gui.booklet_gui import BookletGui
 
 from typing import List
 
+import resources_rc
+
 
 class Home:
     def __init__(self):
@@ -23,11 +25,13 @@ class Home:
         # self._init_ui()
         # self._setup_events()
         self._selected_tracking_data = Event_()
+        self._clicked_rename_button = Event_()
         self._tracker_data_path: str = None
 
     def _init_ui(self):
         self._widget = qtw.QWidget()
         self._widget.setWindowTitle("Invoice Renamer")
+        self._widget.setWindowIcon(qtg.QIcon(":/renamerlogo.png"))
         self._widget.resize(500, 600)
         layout = qtw.QVBoxLayout()
         self._widget.setLayout(layout)
@@ -44,9 +48,10 @@ class Home:
         self._scroll_area.setWidgetResizable(True)
         layout.addWidget(self._scroll_area)
 
-        rename_button = qtw.QPushButton()
-        rename_button.setText("Multiple Rename")
-        layout.addWidget(rename_button)
+        # rename_button = qtw.QPushButton()
+        # rename_button.clicked.connect(self._clicked_rename_button.publish)
+        # rename_button.setText("Multiple Rename")
+        # layout.addWidget(rename_button)
 
     def _setup_events(self):
 
@@ -58,6 +63,10 @@ class Home:
     @property
     def selected_tracking_data(self) -> Event:
         return self._selected_tracking_data
+
+    @property
+    def clicked_rename_button(self) -> Event:
+        return self._clicked_rename_button
 
     def get_tracker_data_path(self) -> str:
         return self._tracker_data_path
